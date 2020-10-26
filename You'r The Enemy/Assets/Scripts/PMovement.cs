@@ -10,6 +10,7 @@ public class PMovement : MonoBehaviour
     {
         MyBody = GetComponent<Rigidbody2D>();
     }
+    
     private void FixedUpdate()
     {
        
@@ -18,31 +19,15 @@ public class PMovement : MonoBehaviour
             MyBody.velocity = new Vector2(SpeedX, SpeedY);
 
             Vector2 temp = transform.position;
-            if (temp.x > 7.7f)
-            {
-                temp.x = 7.7f;
-            }
-            if (temp.x < -7.7f)
-            {
-                temp.x = -7.7f;
-            }
-            if (temp.y > 4f)
-            {
-                temp.y = 4f;
-            }
-            if (temp.y < -4f)
-            {
-                temp.y = -4f;
-            }
+            temp.x = Mathf.Clamp(temp.x, -7.7f, 7.7f);
+            temp.y = Mathf.Clamp(temp.y, -4f, 4f);
+            
             transform.position = temp;
     
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "Egg")
-        {
-            Destroy(gameObject);
-        }
+        if (collision.gameObject.CompareTag("Egg")) Destroy(gameObject);
     }
 }//end
