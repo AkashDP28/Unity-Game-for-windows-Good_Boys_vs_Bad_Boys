@@ -25,32 +25,30 @@ public class Pspawnner : MonoBehaviour
 
     private void Start()
     {
-    
-            Invoke("Spawn", 2f);
-            Timer = 60;
-            NewTimer = 60;
-   
+        Invoke("Spawn", 2f);
+        Timer = 60;
+        NewTimer = 60;
     }
 
     private void Update()
     {
-       
-            Timer = Timer - 1;
-            if (Timer == 0)
-            {
-                Timer = 60;
-                NewTimer--;
-
-            }
-            TimerSecond.text = "Time :- " + NewTimer.ToString("0");
-            if (NewTimer == 0)
-            {
-                Zero();
-                Debug.Log("YeWala");
-                Time.timeScale = 0f;
-            }
+        Timer -= 1;
+        if (Timer == 0)
+        {
+            Timer = 60;
+            NewTimer--;
+        }
+        
+        TimerSecond.text = "Time :- " + NewTimer.ToString();
+        if (NewTimer == 0)
+        {
+            Zero();
+            Debug.Log("YeWala");
+            Time.timeScale = 0f;
+        }
       
     }
+    
     void Spawn()
     {
         if (!Stop)
@@ -58,7 +56,10 @@ public class Pspawnner : MonoBehaviour
             Vector2 temp = transform.position;
             temp.y = Random.Range(-4.0f, 4.0f);
             temp.x = Random.Range(-7.7f, 7.7f);
-            if (Random.Range(0, 2) > 0)
+            
+            bool randomRed = Random.value > 0.5f;
+            
+            if (randomRed)
             {
                 Instantiate(Red, temp, Quaternion.identity);
             }
@@ -66,6 +67,7 @@ public class Pspawnner : MonoBehaviour
             {
                 Instantiate(Green, temp, Quaternion.identity);
             }
+            
             Invoke("Spawn", 1f);
         }
     }
@@ -80,6 +82,7 @@ public class Pspawnner : MonoBehaviour
         GameObject[] GreenCollector = GameObject.FindGameObjectsWithTag("Green");
         print(RedCollector.Length);
         print(GreenCollector.Length);
+        
         if (RedCollector.Length > GreenCollector.Length)
         {
             YouWinText.text = "YOU WIN !!";
@@ -90,20 +93,20 @@ public class Pspawnner : MonoBehaviour
             YouWinText.text = "YOU LOOSE !!";
             Person.text = "Good Boys Win";
         }
+        
         ScoreValue = RedCollector.Length * 10 - GreenCollector.Length * 5;
-        PlayerPrefs.SetInt("Score", ScoreValue);
         if (PlayerPrefs.HasKey("HighScore"))
         {
-            if (PlayerPrefs.GetInt("Score") > PlayerPrefs.GetInt("HighScore"))
+            if (ScoreValue > PlayerPrefs.GetInt("HighScore"))
             {
-                PlayerPrefs.SetInt("HighScore", PlayerPrefs.GetInt("Score"));
+                PlayerPrefs.SetInt("HighScore", ScoreValue);
             }
         }
         else
         {
-            PlayerPrefs.SetInt("HighScore", 0);
+            PlayerPrefs.SetInt("HighScore", ScoreValue);
         }
-        Score.text = "Score             :-            " + PlayerPrefs.GetInt("Score");
+        Score.text = "Score             :-            " + ScoreValue;
         HighScore.text = "High Score    :-            " + PlayerPrefs.GetInt("HighScore");
     
        
